@@ -1,55 +1,80 @@
 const { Kraken } = require('node-kraken-api'); 
 const Binance = require('binance-api-node').default;
+const WebSocket = require('ws');
 const Huobi = require('node-huobi-api');
 const Okhttp = require('okhttp');
 const ordersLimit = 10;
 
+function onCompleteKraken(message)
+{
+  var orderBookKrakenJSON = JSON.parse(message.data);
+  var orderBookAsks = orderBookKrakenJSON.result.XBTUSDT.asks;
+  var orderBookBids = orderBookKrakenJSON.result.XBTUSDT.bids;
+  var bidsAndAsksSum = 0;
+  orderBookAsks.forEach(x => bidsAndAsksSum += parseFloat(x[0]));
+  orderBookBids.forEach(x => bidsAndAsksSum += parseFloat(x[0]));
+  var krakenBTCPrice = bidsAndAsksSum / (orderBookAsks.length + orderBookBids.length);
+  return krakenBTCPrice;
+}
+
+function onErrorKraken(error)
+{
+  console.error(error);
+}
+
 async function getKrakenBTCPrice()
 { 
-    const kraken = new Kraken();
-    var orderBookKrakenJSON = await kraken.depth({ pair: "XBTUSDT", count: ordersLimit });
-    var orderBookAsks = orderBookKrakenJSON.XBTUSDT.asks;
-    var orderBookBids = orderBookKrakenJSON.XBTUSDT.bids;
-    var bidsAndAsksSum = 0;
-    orderBookAsks.forEach(x => bidsAndAsksSum += parseFloat(x[0]));
-    orderBookBids.forEach(x => bidsAndAsksSum += parseFloat(x[0]));
-    var btcPriceKraken = bidsAndAsksSum / (orderBookAsks.length + orderBookBids.length);
-    return btcPriceKraken;
+  var url = 'https://api.kraken.com/0/public/Depth?pair=XBTUSDT&count=' + ordersLimit;
+  var RequestBuilder = Okhttp.RequestBuilder;
+  var rslt = await new RequestBuilder().GET(url).buildAndExecute().then(onCompleteKraken).catch(onErrorKraken);
+  return rslt;
 }
 
-function computeBidsAndAsksAverage(resolve, reject)
+
+
+
+
+
+
+function getRawDataFromSocket(resolve, reject)
 {
-    const binance = new Binance();
-    try
-    {
-        binance.ws.partialDepth({ symbol: 'BTCUSDT', level: ordersLimit }, (depth) => { 
-        var orderBookAsks = depth.asks;
-        var orderBookBids = depth.bids;
-        var bidsAndAsksSum = 0;
-        orderBookAsks.forEach(x => bidsAndAsksSum += parseFloat(x.price));
-        orderBookBids.forEach(x => bidsAndAsksSum += parseFloat(x.price));
-        var btcPriceBinance = bidsAndAsksSum / (orderBookAsks.length + orderBookBids.length);
-        resolve(btcPriceBinance); 
-    });
-    } 
-    catch(err) 
-    {
-      reject(false);
-    }
+  const ws = new WebSocket('wss://ws-api.binance.com:443/ws-api/v3');
+  ws.onopen = () => 
+  {
+    ws.send(JSON.stringify({
+      id: '51e2affb-0aba-4821-ba75-f2625006eb43',
+      params: { symbol: "BTCUSDT", "limit": ordersLimit },
+      method: "depth"
+    }));
+  };
+  ws.onerror = (e) => reject('error = ' + e);
+  //ws.onclose = () => console.log('SOCKET CLOSED');
+  ws.onmessage = (e) => resolve(JSON.parse(e.data));
 }
 
-function getBinanceBTCPricePromise() 
+function getBinanceBTCPricePromiseXXX() 
 { 
-    return new Promise(computeBidsAndAsksAverage);
+    return new Promise(getRawDataFromSocket);
 }
+
 
 async function getBinanceBTCPriceWithWebSockets()
 { 
-    var rslt = await getBinanceBTCPricePromise().then(x => x);
-    return rslt;
+  var orderBookBinanceJSON = await getBinanceBTCPricePromiseXXX().then(x => x);
+  var orderBookAsks = orderBookBinanceJSON.result.asks;
+  var orderBookBids = orderBookBinanceJSON.result.bids;
+  var bidsAndAsksSum = 0;
+  orderBookAsks.forEach(x => bidsAndAsksSum += parseFloat(x[0]));
+  orderBookBids.forEach(x => bidsAndAsksSum += parseFloat(x[0]));
+  var binanceBTCPrice = bidsAndAsksSum / (orderBookAsks.length + orderBookBids.length);
+  return binanceBTCPrice;
 }
 
-function onComplete(message)
+
+
+
+
+function onCompleteHuobi(message)
 {
   var orderBookHuobiJSON = JSON.parse(message.data);
   var orderBookAsks;
@@ -69,7 +94,7 @@ function onComplete(message)
   return huobiBTCPrice;
 }
 
-function onError(error)
+function onErrorHuobi(error)
 {
   console.error(error);
 }
@@ -78,7 +103,7 @@ async function getHuobiBTCPrice()
 { 
     var url = 'https://api.huobi.pro/market/depth?symbol=btcusdt&type=step0';
     var RequestBuilder = Okhttp.RequestBuilder;
-    var rslt = await new RequestBuilder().GET(url).buildAndExecute().then(onComplete).catch(onError);
+    var rslt = await new RequestBuilder().GET(url).buildAndExecute().then(onCompleteHuobi).catch(onErrorHuobi);
     return rslt;
 }
 
