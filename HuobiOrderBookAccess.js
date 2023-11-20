@@ -22,8 +22,8 @@ async function getHuobiBTCPrice()
 { 
     var url = 'https://api.huobi.pro/market/depth?symbol=btcusdt&type=step0&depth=' + ordersLimit;
     var RequestBuilder = Okhttp.RequestBuilder;
-    var rslt = await new RequestBuilder().GET(url).buildAndExecute().then(onCompleteHuobi).catch(onErrorHuobi);
-    return rslt;
+    var huobiBTCPrice = await new RequestBuilder().GET(url).buildAndExecute().then(onCompleteHuobi).catch(onErrorHuobi);
+    return huobiBTCPrice;
 }
 
 module.exports = { getHuobiBTCPrice };

@@ -22,8 +22,8 @@ async function getKrakenBTCPrice()
 { 
   var url = 'https://api.kraken.com/0/public/Depth?pair=XBTUSDT&count=' + ordersLimit;
   var RequestBuilder = Okhttp.RequestBuilder;
-  var rslt = await new RequestBuilder().GET(url).buildAndExecute().then(onCompleteKraken).catch(onErrorKraken);
-  return rslt;
+  var krakenBTCPrice = await new RequestBuilder().GET(url).buildAndExecute().then(onCompleteKraken).catch(onErrorKraken);
+  return krakenBTCPrice;
 }
 
 module.exports = { getKrakenBTCPrice };
