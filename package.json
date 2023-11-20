@@ -1,0 +1,19 @@
+{
+  "name": "orderbookaverageprice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "binance-api-node": "^0.12.7",
+    "express": "^4.18.2",
+    "node-binance-api": "^0.13.1",
+    "node-huobi-api": "^1.0.15",
+    "node-kraken-api": "^2.2.2",
+    "okhttp": "^1.1.0"
+  }
+}
