@@ -1,15 +1,17 @@
 const express = require('express');
 const ArrayManagement = require('./ArrayManagement.js');
-const ExchangeOrderBookAccess = require('./ExchangeOrderBookAccess.js');
+const KrakenOrderBookAccess = require('./KrakenOrderBookAccess.js');
+const BinanceOrderBookAccess = require('./BinanceOrderBookAccess.js');
+const HuobiOrderBookAccess = require('./HuobiOrderBookAccess.js');
 
 const server = express();
 const port = 8080;
 
 async function getAverageBTCPrice(req, res)
 { 
-    var krakenBTCPrice = await ExchangeOrderBookAccess.getKrakenBTCPrice();
-    var binanceBTCPrice = await ExchangeOrderBookAccess.getBinanceBTCPriceWithWebSockets();
-    var huobiBTCPrice = await ExchangeOrderBookAccess.getHuobiBTCPrice();
+    var krakenBTCPrice = await KrakenOrderBookAccess.getKrakenBTCPrice();
+    var binanceBTCPrice = await BinanceOrderBookAccess.getBinanceBTCPriceWithWebSockets();
+    var huobiBTCPrice = await HuobiOrderBookAccess.getHuobiBTCPrice();
     var btcPriceArray = [];
     btcPriceArray.push(krakenBTCPrice);
     btcPriceArray.push(binanceBTCPrice);
