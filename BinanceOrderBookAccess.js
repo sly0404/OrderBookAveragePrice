@@ -17,7 +17,7 @@ function getRawDataFromSocket(resolve, reject)
   ws.onmessage = (e) => resolve(JSON.parse(e.data));
 }
 
-function getBinanceBTCPricePromiseXXX() 
+function getBinanceBTCPricePromise() 
 { 
     return new Promise(getRawDataFromSocket);
 }
@@ -25,7 +25,7 @@ function getBinanceBTCPricePromiseXXX()
 
 async function getBinanceBTCPriceWithWebSockets()
 { 
-  var orderBookBinanceJSON = await getBinanceBTCPricePromiseXXX().then(x => x);
+  var orderBookBinanceJSON = await getBinanceBTCPricePromise().then(x => x);
   var orderBookAsks = orderBookBinanceJSON.result.asks;
   var orderBookBids = orderBookBinanceJSON.result.bids;
   var bidsAndAsksSum = 0;
