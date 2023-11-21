@@ -39,9 +39,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HuobiOrderBook = void 0;
 var Okhttp = require('okhttp');
 var ordersLimit = 10;
+//represent a Huobi Order Book
 var HuobiOrderBook = /** @class */ (function () {
     function HuobiOrderBook() {
-        this._bTCPrice = 5;
+        this._bTCPrice = 0;
     }
     Object.defineProperty(HuobiOrderBook.prototype, "bTCPrice", {
         get: function () {

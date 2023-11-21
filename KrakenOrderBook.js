@@ -39,9 +39,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KrakenOrderBook = void 0;
 var Okhttp = require('okhttp');
 var ordersLimit = 10;
+//represent a Kraken Order Book
 var KrakenOrderBook = /** @class */ (function () {
     function KrakenOrderBook() {
-        this._bTCPrice = 5;
+        this._bTCPrice = 0;
     }
     Object.defineProperty(KrakenOrderBook.prototype, "bTCPrice", {
         get: function () {

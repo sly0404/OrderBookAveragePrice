@@ -43,6 +43,7 @@ var BinanceOrderBook_1 = require("./BinanceOrderBook");
 var HuobiOrderBook_1 = require("./HuobiOrderBook");
 var server = express();
 var port = 8080;
+// compute and provide the average price of an array of BTC price extract from differents exchanges 
 function getAverageBTCPrice(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var krakenOrderBook, krakenBTCPrice, binanceOrderBook, binanceBTCPrice, huobiOrderBook, huobiBTCPrice, btcPriceArray, averageBTCPrice;

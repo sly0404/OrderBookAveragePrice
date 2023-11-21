@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BinanceOrderBook = void 0;
 var WebSocket = require('ws');
 var ordersLimit = 10;
+//represent a Binance Order Book
 var BinanceOrderBook = /** @class */ (function () {
     function BinanceOrderBook() {
         this._bTCPrice = 5;

@@ -2,13 +2,14 @@ import { OrderBook } from './OrderBook';
 const Okhttp = require('okhttp');
 const ordersLimit = 10;
 
+//represent a Kraken Order Book
 export class KrakenOrderBook implements OrderBook
 {
     private _bTCPrice: number;
 
     constructor() 
     {
-        this._bTCPrice = 5;
+        this._bTCPrice = 0;
     }
 
     public get bTCPrice() 

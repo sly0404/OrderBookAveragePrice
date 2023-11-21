@@ -2,6 +2,7 @@ import { OrderBook } from './OrderBook';
 const WebSocket = require('ws');
 const ordersLimit = 10;
 
+//represent a Binance Order Book
 export class BinanceOrderBook implements OrderBook
 {
     private _bTCPrice: number;

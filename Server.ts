@@ -8,6 +8,7 @@ const server = express();
 const port = 8080;
 
 
+// compute and provide the average price of an array of BTC price extract from differents exchanges 
 async function getAverageBTCPrice(req, res)
 { 
   var krakenOrderBook = new KrakenOrderBook();
@@ -21,11 +22,17 @@ async function getAverageBTCPrice(req, res)
   var huobiOrderBook = new HuobiOrderBook();
   await huobiOrderBook.computeAverageBTCPrice();
   var huobiBTCPrice: number = huobiOrderBook.bTCPrice;
-  
+
   var btcPriceArray: number[] = [];
   btcPriceArray.push(krakenBTCPrice);
   btcPriceArray.push(binanceBTCPrice);
   btcPriceArray.push(huobiBTCPrice);
+
+  /*to simply add others exchanges :
+    - create class XXX that implements interface OrderBook
+    - implements computeAverageBTCPrice() in XXX
+    - add     var xxxBTCPrice: number = xxxOrderBook.bTCPrice;
+    - use  xxxBTCPrice.push(huobiBTCPrice);*/
 
   var averageBTCPrice = ArrayManagement.getArrayAverage(btcPriceArray);
   res.send({
