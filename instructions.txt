@@ -1,0 +1,11 @@
+commands to execute
+
+tsc Server.ts               to compile in JS
+node Server.js              to lauch the API server
+request with Postman or other on endpoint with GET method: localhost:8080/orderBookAveragePrice
+
+example of result returned :
+
+{
+    "averagePrice": 37328.074
+}
